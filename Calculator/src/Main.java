@@ -23,9 +23,9 @@ public class Main {
             a = inputEx[0];
             b = inputEx[2];
             op = inputEx[1];
-           /* if (Integer.parseInt(a) < 0 || Integer.parseInt(a) > 10 || Integer.parseInt(b) < 0 || Integer.parseInt(b) > 10) {
+            if (Integer.parseInt(a) < 0 || Integer.parseInt(a) > 10 || Integer.parseInt(b) < 0 || Integer.parseInt(b) > 10) {
                 throw new NumberFormatException("Неверный диапазон чисел");
-            }*/
+        }
             if (isArabian(a, b)) {
                 num1 = Integer.parseInt(a);
                 num2 = Integer.parseInt(b);
@@ -72,5 +72,5 @@ public class Main {
         } else
             return false;
     }
-
 }
+
