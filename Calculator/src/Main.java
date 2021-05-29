@@ -1,5 +1,8 @@
-import java.lang.reflect.Array;
-import java.util.*;
+package Calculator.src;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
 
@@ -9,13 +12,14 @@ public class Main {
     static ArrayList<String> rome = new ArrayList<>(Arrays.asList("X", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "XI"));
 
     public static void main(String[] args) {
-        System.out.println("Введите выражение. Для выхода введите \"exit\".");
+        System.out.println("Введите выражение, разделите числа и знак операции пробелами. Для выхода введите \"exit\".");
         Scanner scanner = new Scanner(System.in);
         String a;
         String b;
         String op;
-        do {
-            String input = scanner.nextLine();
+        String input;
+
+        while (!(input = scanner.nextLine()).equals("")) {
             if (input.equalsIgnoreCase("exit")) {
                 break;
             }
@@ -23,28 +27,24 @@ public class Main {
             a = inputEx[0];
             b = inputEx[2];
             op = inputEx[1];
-            if (Integer.parseInt(a) < 0 || Integer.parseInt(a) > 10 || Integer.parseInt(b) < 0 || Integer.parseInt(b) > 10) {
-                throw new NumberFormatException("Неверный диапазон чисел");
-        }
+
             if (isArabian(a, b)) {
+                isInRange(a, b);
                 num1 = Integer.parseInt(a);
                 num2 = Integer.parseInt(b);
                 System.out.println(operation(num1, num2, op));
-            }
-            if (isRoman(a, b)) {
-                a = RomeNumbers.toArabian(a);
-                b = RomeNumbers.toArabian(b);
-                num1 = Integer.parseInt(a);
-                num2 = Integer.parseInt(b);
+            } else if (isRoman(a, b)) {
+                num1 = RomanNumbers.getRomanNumbers().get(a.toUpperCase());
+                num2 = RomanNumbers.getRomanNumbers().get(b.toUpperCase());
                 int result = operation(num1, num2, op);
                 System.out.println(result);
+            } else {
+                throw new RuntimeException("Пожалуйста введите арабские или римские числа");
             }
-
-        } while (true);
-
+        }
     }
 
-    static int operation(int a, int b, String op) {
+    private static int operation(int a, int b, String op) {
         switch (op) {
             case "+":
                 return a + b;
@@ -55,22 +55,22 @@ public class Main {
             case "/":
                 return a / b;
             default:
-                return 0;
+                throw new RuntimeException("Неизвестный операнд, введите: -, +, *, /");
         }
     }
 
     static boolean isArabian(String a, String b) {
-        if (arab.contains(a) && arab.contains(b)) {
-            return true;
-        } else
-            return false;
+        return arab.contains(a) && arab.contains(b);
     }
 
-    static boolean isRoman(String a, String b) {
-        if (rome.contains(a) && rome.contains(b)) {
-            return true;
-        } else
-            return false;
+    private static boolean isRoman(String a, String b) {
+        return rome.contains(a.toUpperCase()) && rome.contains(b.toUpperCase());
+    }
+
+    private static void isInRange(String first, String second) {
+        if (Integer.parseInt(first) < 0 || Integer.parseInt(first) > 10 || Integer.parseInt(second) < 0 || Integer.parseInt(second) > 10) {
+            throw new NumberFormatException("Введите числа от 1 до 10 включительно");
+        }
     }
 }
 
