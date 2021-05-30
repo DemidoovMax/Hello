@@ -29,16 +29,7 @@ public class RomanNumbers {
         romanNumbers.put("L", 100);
     }
 
-    public static String toRoman(int arabic) {
-        if (arabic > 10) {
-            for (int i = 100; i >= 10 ; i-= 10) {
-                int i1 = arabic % i;
 
-            }
-        } else {
-
-        }
-    }
 
     public static Map<String, Integer> getRomanNumbers() {
         return romanNumbers;
