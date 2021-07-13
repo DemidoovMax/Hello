@@ -1,10 +1,11 @@
 package jm.task.core.jdbc.util;
 
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Util {
+public class Util implements AutoCloseable {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/mydbtest";
@@ -20,5 +21,10 @@ public class Util {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        connection.close();
     }
 }
