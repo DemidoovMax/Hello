@@ -11,6 +11,7 @@ import java.util.List;
 
 @Component
 @ComponentScan("web")
+@Transactional
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
@@ -18,25 +19,21 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    @Transactional
     public List<User> getUserList() {
         return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
-    @Transactional
     public void add(User user) {
         entityManager.persist(user);
     }
 
     @Override
-    @Transactional
     public void delete(int id) {
         entityManager.createQuery("delete from User u where u.id = :id").setParameter("id", id).executeUpdate();
     }
 
     @Override
-    @Transactional
     public void update(User user) {
         entityManager.merge(user);
     }
