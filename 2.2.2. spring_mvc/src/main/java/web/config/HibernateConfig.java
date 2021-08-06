@@ -10,7 +10,9 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import web.model.Role;
 import web.model.User;
+
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -44,7 +46,7 @@ public class  HibernateConfig {
         properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
 
         sessionFactoryBean.setHibernateProperties(properties);
-        sessionFactoryBean.setAnnotatedClasses(User.class);
+        sessionFactoryBean.setPackagesToScan("web.model");
         return sessionFactoryBean;
     }
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Component
 @ComponentScan("web")
-@Transactional
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
@@ -43,4 +42,11 @@ public class UserDaoImpl implements UserDao {
         return entityManager.createQuery("select u from User u where u.id = :id", User.class)
                 .setParameter("id", id).getSingleResult();
     }
+
+    @Override
+    public User getUserByName(String name) {
+        return entityManager.createQuery("select u from User u where u.name = :name", User.class)
+                .setParameter("name", name).getSingleResult();
+    }
+
 }
