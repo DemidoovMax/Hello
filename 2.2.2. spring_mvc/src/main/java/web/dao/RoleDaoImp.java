@@ -23,7 +23,7 @@ public class RoleDaoImp implements RoleDao {
 
     @Override
     public void deleteRole(String name) {
-        entityManager.createQuery("delete from User u where u.name = :name")
+        entityManager.createQuery("delete from Role r where r.role = :name")
                 .setParameter("name", name).executeUpdate();
     }
 
@@ -31,11 +31,19 @@ public class RoleDaoImp implements RoleDao {
     public Role getRole(String name) {
         return entityManager.createQuery("select r from Role r where r.role = :role", Role.class)
                 .setParameter("role", name).getSingleResult();
-
     }
 
     @Override
     public void saveRole(Role role) {
-        entityManager.persist(role);
+        if (role.getId() < 1) {
+            entityManager.persist(role);
+        }
+        entityManager.merge(role);
+    }
+
+    @Override
+    public Role getRoleById(Long id) {
+        return entityManager.createQuery("select r from Role r where r.id = :id", Role.class)
+                .setParameter("id", id).getSingleResult();
     }
 }

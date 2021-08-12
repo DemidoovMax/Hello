@@ -1,21 +1,30 @@
 package web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import web.model.Role;
 import web.model.User;
+import web.service.RoleService;
 import web.service.UserService;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @EnableWebMvc
 @RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
+    private final RoleService roleService;
 
-    public AdminController(UserService userService) {
+    @Autowired
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
+
 
     @GetMapping
     public String index(Model model) {
@@ -34,8 +43,15 @@ public class AdminController {
         return "views/new";
     }
 
-    @PostMapping()
-    public String create(@ModelAttribute("user") User user) {
+    @PostMapping
+    public String createUser
+            (@ModelAttribute("user") User user, @RequestParam(required = false) String adminRole) {
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(roleService.getRoleById(2L));
+        if (adminRole != null && adminRole.equals(roleService.getRoleById(1L).getRole())) {
+            userRoles.add(roleService.getRoleById(1L));
+        }
+        user.setRoles(userRoles);
         userService.add(user);
         return "redirect:/admin";
     }

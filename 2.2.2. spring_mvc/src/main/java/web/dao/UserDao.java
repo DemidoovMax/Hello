@@ -10,11 +10,11 @@ public interface UserDao {
 
     void add(User user);
 
-    void delete(int id);
+    void delete(long id);
 
     void update(User user);
 
-    User getUserById(int id);
+    User getUserById(long id);
 
-    User getUserByName(String name);
+    User findByUsername(String name);
 }

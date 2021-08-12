@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -12,17 +13,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import web.service.UserService;
+import web.service.UserServiceImp;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
+    private final UserService userDetailsService; // сервис, с помощью которого тащим пользователя
     private final SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
 
     @Autowired
-    public SecurityConfig(@Qualifier("userServiceImp") UserDetailsService userDetailsService, SuccessUserHandler successUserHandler) {
+    public SecurityConfig(@Qualifier("userServiceImp") UserService userDetailsService, SuccessUserHandler successUserHandler) {
         this.userDetailsService = userDetailsService;
         this.successUserHandler = successUserHandler;
     }
@@ -40,11 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/user").access("hasAnyRole('ROLE_USER')") // разрешаем входить на /user пользователям с ролью User
 //                .and().formLogin()  // Spring сам подставит свою логин форму
 //                .successHandler(successUserHandler); // подключаем наш SuccessHandler для перенеправления по ролям
+
         http.authorizeRequests()
+                .antMatchers("/login").anonymous()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .and().formLogin().successHandler(successUserHandler).permitAll()
-                .and().logout().logoutSuccessUrl("/");
+//                .and().logout().logoutSuccessUrl("/login?logout")
+                .and().csrf().disable();
     }
 
     // Необходимо для шифрования паролей
@@ -53,4 +59,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static NoOpPasswordEncoder passwordEncoder() {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
+
+//    @Bean
+//    public DaoAuthenticationProvider daoAuthenticationProvider() {
+//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setPasswordEncoder(passwordEncoder());
+//        authenticationProvider.setUserDetailsService(userDetailsService);
+//        return authenticationProvider;
+//    }
 }

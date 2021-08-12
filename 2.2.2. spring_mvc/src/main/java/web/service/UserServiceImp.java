@@ -44,8 +44,17 @@ public class UserServiceImp implements UserService {
         return userDao.getUserById(id);
     }
 
+    public User findByUsername(String name) {
+        return userDao.findByUsername(name);
+    }
+
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userDao.getUserByName(s);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User '%s' not found", username));
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword()
+                , user.getAuthorities());
     }
 }
