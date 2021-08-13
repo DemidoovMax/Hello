@@ -29,12 +29,14 @@ public class AdminController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("users", userService.getUserList());
+        model.addAttribute("roles", roleService.getRolesList());
         return "views/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("roles", roleService.getRolesList());
         return "views/show";
     }
 
@@ -47,9 +49,9 @@ public class AdminController {
     public String createUser
             (@ModelAttribute("user") User user, @RequestParam(required = false) String adminRole) {
         Set<Role> userRoles = new HashSet<>();
-        userRoles.add(roleService.getRoleById(2L));
-        if (adminRole != null && adminRole.equals(roleService.getRoleById(1L).getRole())) {
-            userRoles.add(roleService.getRoleById(1L));
+        userRoles.add(roleService.getRoleById(1L));
+        if (adminRole != null && adminRole.equals(roleService.getRoleById(2L).getRole())) {
+            userRoles.add(roleService.getRoleById(2L));
         }
         user.setRoles(userRoles);
         userService.add(user);
@@ -62,7 +64,13 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user) {
+    public String update(@ModelAttribute("user") User user, @RequestParam(required = false) String adminRole) {
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(roleService.getRoleById(1L));
+        if (adminRole != null) {
+            userRoles.add(roleService.getRoleById(2L));
+        }
+        user.setRoles(userRoles);
         userService.update(user);
         return "redirect:/admin";
     }

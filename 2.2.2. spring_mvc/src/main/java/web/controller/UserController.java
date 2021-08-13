@@ -12,7 +12,7 @@ import java.security.Principal;
 
 @Controller
 @EnableWebMvc
-@RequestMapping("/user")
+@RequestMapping
 public class UserController {
 
     private UserService userService;
@@ -22,9 +22,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public String printUsers(Model model, Principal principal) {
-        model.addAttribute("user" , userService.loadUserByUsername(principal.getName()));
+        model.addAttribute("user" , userService.findByUsername(principal.getName()));
         return "views/show";
     }
 

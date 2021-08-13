@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,15 +43,6 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public void addRole(Role role) {
-        roles.add(role);
-        role.getUsers().add(this);
-    }
-
-    public void deleteRole(Role role) {
-        roles.remove(role);
-        role.getUsers().remove(this);
-    }
 
     public Long getId() {
         return id;
@@ -86,7 +76,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 

@@ -13,6 +13,7 @@
         <th>Name</th>
         <th>Surname</th>
         <th>Username</th>
+        <th>Authorities</th>
         <th>Profile</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -24,6 +25,7 @@
         <td th:text="${user.getName()}"></td>
         <td th:text="${user.getSurname()}"></td>
         <td th:text="${user.getUsername()}"></td>
+        <td th:text="${user.getRoles()}"></td>
         <td>
             <form style="display: inline" th:method="GET" th:action="@{/admin/{id}(id=${user.getId()})}">
                 <input type="submit" value="View profile"/>
@@ -46,6 +48,11 @@
 <br/>
 <form th:method="GET" th:action="@{/admin/new}">
     <input type="submit" value="Create user"/>
+</form>
+<br/>
+<br/>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Sign Out</button>
 </form>
 
 <br/>
